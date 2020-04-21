@@ -1,1 +1,323 @@
-blockchain-links
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Blockchain Links</title>
+    <meta http-equiv='Content-Type' content='text/html;charset=utf-8'/>
+    <!--
+      === NOTA BENE ===
+      For the three scripts below, if your spec resides on dev.w3 you can check them
+      out in the same tree and use relative links so that they'll work offline,
+     -->
+    <script src='//www.w3.org/Tools/respec/respec-w3c-common' class='remove'></script>
+    <script type="text/javascript" class="remove">
+        var respecConfig = {
+            // specification status (e.g. WD, LCWD, NOTE, etc.). If in doubt use ED.
+            specStatus:           "ED",
+
+            // the specification's short name, as in http://www.w3.org/TR/short-name/
+            shortName:            "blockchain-links",
+
+            // if you wish the publication date to be other than today, set this
+            // publishDate:  "2009-08-06",
+
+            // if there is a previously published draft, uncomment this and set its YYYY-MM-DD date
+            // and its maturity status
+            // previousPublishDate:  "1977-03-15",
+            // previousMaturity:  "WD",
+
+
+            // if there a publicly available Editor's Draft, this is the link
+            // edDraftURI:           "",
+
+            // if this is a LCWD, uncomment and set the end of its review period
+            // lcEnd: "2009-08-05",
+
+            // if you want to have extra CSS, append them to this list
+            // it is recommended that the respec.css stylesheet be kept
+            //extraCSS:             ["spec.css", "prettify.css"],
+
+            // editors, add as many as you like
+            // only "name" is required
+            editors:  [
+                { name: "Anthony Ronning", url: "https://learningmachine.com/",
+                    company: "Learning Machine", companyURL: "https://learningmachine.com/" }
+            ],
+
+            // authors, add as many as you like.
+            // This is optional, uncomment if you have authors as well as editors.
+            // only "name" is required. Same format as editors.
+
+            authors:  [
+                { name: "Anthony Ronning", url: "https://learningmachine.com/",
+                    company: "Learning Machine", companyURL: "https://learningmachine.com/" },
+                { name: "Manu Sporny", url: "http://digitalbazaar.com/",
+                    company: "Digital Bazaar", companyURL: "http://digitalbazaar.com/" }
+            ],
+
+            // name of the WG
+            //wg:           "",
+
+            // URI of the public WG page
+            //wgURI:        "",
+
+            // name (with the @w3c.org) of the public mailing to which comments are due
+            //wgPublicList: "",
+
+            otherLinks: [{
+                key: "Source control",
+                data: [{
+                    value: "https://github.com/blockchain-certificates/blockchain-links/",
+                    href: "https://github.com/blockchain-certificates/blockchain-links/"
+                }]
+            }, {
+                key: "Issue Tracker",
+                data: [{
+                    value: "https://github.com/blockchain-certificates/blockchain-links/issues/",
+                    href: "https://github.com/blockchain-certificates/blockchain-links/issues/"
+                }]
+            }],
+
+            // URI of the patent status for this WG, for Rec-track documents
+            // !!!! IMPORTANT !!!!
+            // This is important for Rec-track documents, do not copy a patent URI from a random
+            // document unless you know what you're doing. If in doubt ask your friendly neighbourhood
+            // Team Contact.
+            wgPatentURI:  "",
+            maxTocLevel: 4,
+            /*preProcess: [ webpayments.preProcess ],
+            alternateFormats: [ {uri: "diff-20111214.html", label: "diff to previous version"} ],
+            */
+            //localBiblio:
+        };
+    </script>
+</head>
+<body>
+    <section id='abstract'>
+        <p>
+            This specification describes Blockchain Links (Blinks) as a method for
+            referencing blockchain-based data such as transactions and blocks.
+        </p>
+    </section>
+    <section>
+        <h2>Introduction</h2>
+        <p>
+            Referencing data in a Blockchain or DLT is useful for a variety of
+            use cases and applications. For example:
+        </p>
+        <ul>
+            <li>
+                Web-based blockchain explorers, especially those supporting multiple chains.
+            </li>
+            <li>
+                Blockchain API's.
+            </li>
+            <li>
+                Validating timestamps across chains.
+            </li>
+            <li>
+                Checking additional transaction data for smart contracts or data hashes.
+            </li>
+            <li>
+                Looking up a specific block.
+            </li>
+        </ul>
+        <p>
+            Existing methods of referencing Blockchain data are typically specific to a
+            single Blockchain or a few similar ones in a JSON-based structure, such as
+            <a href="https://chainpoint.org">Chainpoint</a>. Defining a specification
+            for Blinks in a URI format allow it to be used in schema fields that were
+            previously restricted to URI's/URN's as well as opening it up for a variety
+            of encoding mechanisms (such as Concise Binary Object Representation [[RFC7049]]).
+        </p>
+    </section>
+    <section>
+        <h2>Terminology</h2>
+        <p>
+            The following terms are used to describe concepts involved in the
+            referencing of Blockchain Links.
+        </p>
+
+        <dl>
+            <dt><dfn data-lt="blockchains|blockchain technology">blockchain</dfn></dt>
+            <dd>
+                A specific type of <a>distributed ledger technology</a> (DLT) that stores ledger
+                entries in blocks of transactions, which are grouped together and hashed into a
+                cryptographic chain. Because this type of <a>DLT</a> was introduced by
+                <a href="https://en.wikipedia.org/wiki/Bitcoin">Bitcoin</a>, the term
+                <em>blockchain</em> is sometimes used to refer specifically to the Bitcoin
+                ledger.
+            </dd>
+
+            <dt><dfn data-lt="distributed ledger technology|DLT">distributed ledger</dfn> (DLT)</dt>
+            <dd>
+                A <a href="https://en.wikipedia.org/wiki/Distributed_database">distributed database</a>
+                in which the various nodes use a
+                <a href="https://en.wikipedia.org/wiki/Consensus_(computer_science)">consensus protocol</a>
+                to maintain a shared ledger in which each transaction is cryptographically
+                signed and chained to the previous transaction.
+            </dd>
+
+            <dt><dfn>Blink scheme</dfn></dt>
+            <dd>
+                The formal syntax for Blinks. The generic Blink scheme is defined in this specification.
+                Seperate <a>Blink Chain</a> specifications define a specific Blink scheme that works with that specific
+                <a>Blockchain</a>.
+            </dd>
+
+            <dt><dfn>Blink chain</dfn></dt>
+            <dd>
+                A definition of how a specific <a>Blink scheme</a> can be implemented on a specific <a>distributed ledger</a>
+                or network, including parameters specific to that ledger.
+            </dd>
+
+            <dt><dfn>transaction</dfn></dt>
+            <dd>
+                An individual operation that is recorded onto a distributed ledger.
+            </dd>
+
+            <dt><dfn>block</dfn></dt>
+            <dd>
+                In blockchain-based DLT's, a block refers to a batch of valid transactions.
+            </dd>
+            <dt><dfn>smart contract</dfn></dt>
+            <dd>
+                Automated, executable code that is stored onto a ledger through the action of a transaction.
+            </dd>
+
+            <dt><dfn data-lt="concise binary object representation|CBOR">Concise Binary Object Representation</dfn> (CBOR)</dt>
+            <dd>
+                A binary data format, as defined by [[RFC7049]].
+            </dd>
+
+            <dt><dfn data-lt="URI|URIs">Uniform Resource Identifier</dfn> (URI)</dt>
+
+            <dd>
+                An identifier, as defined by [[RFC3986]].
+            </dd>
+
+            <dt><dfn data-lt="URN|URNs">Uniform Resource Names</dfn> (URN)</dt>
+
+            <dd>
+                A resource identifier, as defined by [[RFC8141]].
+            </dd>
+        </dl>
+    </section>
+
+    <section>
+        <h2>Blockchain Links Specification</h2>
+
+        <p>
+            A Blink MUST adhere to a minimal set of base <a>Blink scheme</a> requirements in order to be a valid.
+            In order to be used with a specific <a>DLT</a>, a <a>Blink chain</a> specification can be implemented to
+            extend the Blink scheme. The Blink specification makes suggestions but does not make requirements or enforcements
+            around how a specific chain is implemented or which chain specification shall be used if multiple are created.
+        </p>
+
+        <div class="issue">Consider a registry that can be used to find existing chain specifications.</div>
+
+        <section>
+            <h3>Blink Syntax</h3>
+
+            <p>
+                The generic <a>Blink scheme</a> is a URI scheme conformant with [[RFC3986]].
+            </p>
+
+            <p>
+                The following is the ABNF definition using the syntax in [[RFC5234]],
+                which defines ALPHA and DIGIT. All other rule names not defined in
+                this ABNF are defined in [[RFC3986]].
+            </p>
+
+            <pre class="nohighlight">
+                blink          = "blink:" chain-name ":" chain-network ":" chain-asset-id
+                chain-name     = 1*chain-char
+                chain-network  = 1*chain-char
+                chain-char     = %x61-7A / DIGIT
+                chain-asset-id = *( ":" *idchar ) 1*idchar
+                idchar         = ALPHA / DIGIT / "." / "-" / "_"
+            </pre>
+
+            <div class="issue">Verify that this ABNF definition is the expectation and inclusive enough for all chains.</div>
+
+        </section>
+
+        <section>
+            <h3>Blink Syntax Parameters</h3>
+
+            <dl>
+                <dt><dfn data-lt="chain name|chain names">chain-name</dfn></dt>
+                <dd>
+                    The value of the <code>chain-name</code> property MUST refer to a
+                    specific <a>Blockchain</a> or <a>DLT</a> type. Possible examples include
+                    <code>bitcoin</code>, <code>ethereum</code>, or <code>hyperledger-indy</code>.
+                </dd>
+
+                <dt><dfn data-lt="chain network|chain networks">chain-network</dfn></dt>
+                <dd>
+                    The value of the <code>chain-network</code> property MUST refer to a
+                    specific operational network of the preceding <a>chain-name</a>.
+                    Possible examples include <code>mainnet</code>, <code>testnet</code>,
+                    or <code>ropsten</code>.
+                </dd>
+
+                <dt><dfn data-lt="chain asset|chain assets">chain-asset-id</dfn></dt>
+                <dd>
+                    The value of the <code>chain-asset-id</code> property MUST refer to a
+                    specific asset from the preceding <a>chain-network</a> from the preceding
+                    <a>chain-name</a>. <code>chain-asset-id</code> SHALL be well defined by
+                    a specific <a>Blink chain</a> specification in order to reference available
+                    assets. Assets MAY include <a>blocks</a>, <a>transactions</a>, <a>smart contracts</a>,
+                    or other available assets depending on the <a>DLT</a>. The necessary information
+                    needed to look up a given asset MAY include multiple asset ID's, as seperated by
+                    a <code>:</code>. A possible example includes <code>abc123:321cba</code> if looking
+                    up transaction <code>321cba</code> on block <code>abc123</code>.
+                </dd>
+            </dl>
+        </section>
+
+        <section>
+            <h3>Examples</h3>
+
+            <section>
+                <h4>Looking up a Bitcoin mainnet transaction from a specific block.</h4>
+
+                <p>An example <a>Blink chain</a> definition for Bitcoin:</p>
+
+                <pre class="example highlight">
+                    blink:bitcoin:[chain-network]:[block]:[transaction]
+                </pre>
+
+                <p>
+                    Referencing
+                    <a href="https://live.blockcypher.com/btc/tx/d7a008c9f9eab701132d394410f4e9d578790fb41848013fc5ba35951acdca24/">
+                        this transaction:</a>
+                </p>
+
+                <pre class="example highlight">
+                    blink:bitcoin:mainnet:000000000000000000010382095b5308881ddf0902b59d0328a1401548383c5a:d7a008c9f9eab701132d394410f4e9d578790fb41848013fc5ba35951acdca24
+                </pre>
+            </section>
+
+            <section>
+                <h4>Looking up an Ethereum ropsten transaction where block is not required.</h4>
+
+                <p>An example <a>Blink chain</a> definition for Ethereum:</p>
+
+                <pre class="example highlight">
+                    blink:ethereum:[chain-network]:[optional block]:[transaction]
+                </pre>
+
+                <p>
+                    Referencing
+                    <a href="https://ropsten.etherscan.io/tx/0xafdcf0708ab37df3eef706ea0c1b985a8fa10b11607fe1c0558022b51f450635">
+                        this transaction:</a>
+                </p>
+
+                <pre class="example highlight">
+                    blink:ethereum:ropsten:0xafdcf0708ab37df3eef706ea0c1b985a8fa10b11607fe1c0558022b51f450635
+                </pre>
+            </section>
+        </section>
+    </section>
+</body>
+</html>
